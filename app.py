@@ -48,25 +48,28 @@ def word_cloud_generator(tokens):
 
 st.title("Text's Statistical Analyzer Tool")
 
-text_input = st.text_area("Text to analyse")
+def submit():
+   st.text(text_input)
+   tokens = tokenizing_regex(text_input)
+   tokens = stopwords_removal(tokens, "portuguese")
+   word_tuples = counting_tokens(tokens)
+   st.plotly_chart(ploting_most_frequent_woords_bar(word_tuples), use_container_width=True)
+   fig = plt.figure(figsize=(10, 12))
+   plt.imshow(word_cloud_generator(tokens), interpolation="bilinear")
+   plt.axis("off")
+   plt.tight_layout(pad=0)
+   st.pyplot(fig)
+
+   
+def clear_text_area():
+    st.session_state.text_input = st.session_state.widget
+    st.session_state.widget = ''
+
+text_input = st.text_area("Text to analyse", key="widget", on_change=submit)
+
+#if 'text_input' not in st.session_state:
+#    st.session_state.text_input = ''
 
 
-
-if text_input != '':
-   run_buton = st.button("Run")
-   if run_buton:
-      tokens = tokenizing_regex(text_input)
-      tokens = stopwords_removal(tokens, "portuguese")
-      word_tuples = counting_tokens(tokens)
-      st.plotly_chart(ploting_most_frequent_woords_bar(word_tuples), use_container_width=True)
-      fig = plt.figure(figsize=(10, 12))
-      plt.imshow(word_cloud_generator(tokens), interpolation="bilinear")
-      plt.axis("off")
-      plt.tight_layout(pad=0)
-      st.pyplot(fig)
-      
-      reset_buton = st.button("Reset")
-      if reset_buton:
-        text_input = ''
-
+   
 
